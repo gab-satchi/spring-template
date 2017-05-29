@@ -1,0 +1,24 @@
+jobs:
+- name: run-tests
+  plan:
+  - get: spring-template
+    trigger: true
+  - task: tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: gradle}
+      inputs:
+      - name: spring-template
+      run:
+          path: gradle
+          args: ["assemble"]
+          dir: spring-template
+resources:
+- name: spring-template
+  type: git
+  source:
+    uri: git@bitbucket.org:gsatchi-pivotal/spring-template.git
+    branch: master
+    private_key: {{bitbucket-key}}
